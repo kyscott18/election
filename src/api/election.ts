@@ -65,6 +65,21 @@ export async function register(
 
 }
 
+export async function vote(
+    web3: Web3,
+    account: string,
+    params: {
+        id: number;
+    }
+) {
+    Election.setProvider(web3.currentProvider);
+    const elect = await Election.deployed();
+
+    await elect.vote(params.id, {
+        from: account,
+    });
+}
+
 export function subscribe( 
     web3: Web3, 
     address: string, 
