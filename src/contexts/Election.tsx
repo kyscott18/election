@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useWeb3Context } from "./Web3";
 import { get as getElection, subscribe } from "../api/election";
+import BN from "bn.js";
 
 interface State {
     address: string,
@@ -47,6 +48,7 @@ interface Set {
 interface Vote {
     type: "VOTE";
     data : {
+        owner: string;
         id: number;
     }
 }
@@ -76,19 +78,48 @@ function reducer(state: State = INITIAL_STATE, action: Action) {
                 data: { owner, id, name},
             } = action;
             const candidates = [
+                ...state.candidates,
                 {
                     owner: owner,
                     id: id, 
                     name: name, 
-                    voteCount: 0,
-                }, 
-                ...state.candidates,
+                    voteCount: 0
+                }
             ];
 
             return {
                 ...state, 
                 candidateCount: state.candidateCount + 1,
-                candidates,
+                candidates: candidates,
+            };
+        }
+
+        case VOTE: {
+            const {
+                data: { owner, id},
+            } = action;
+
+            //TODO: improve this block to make sure only one candidate gets selected
+
+            const candidates = state.candidates.map(c => {
+                console.log(c.id, id)
+                console.log(c.numVotes, typeof c.numVotes)
+                if (c.id === id) {
+                    const updatedC = {
+                        ...c,
+                    };
+                    updatedC.numVotes += 1;
+                    console.log("hit")
+                    return updatedC;
+                }
+                console.log("miss")
+                return c;
+            });
+
+            return {
+                ...state, 
+                voteCount: state.voteCount + 1,
+                candidates: candidates,
             };
         }
 
@@ -105,6 +136,7 @@ interface SetInputs {
 }
 
 interface VoteInputs {
+    owner: string;
     id: number;
 }
 
@@ -177,7 +209,7 @@ export function Updater() {
         state: { web3, account }, 
     } = useWeb3Context();
 
-    const { state, set, register } = useElectionContext();
+    const { state, set, register, vote } = useElectionContext();
 
     useEffect(() => {
         async function get(web3: Web3, account:string) {
@@ -203,8 +235,11 @@ export function Updater() {
                 } else if (log) {
                     switch (log.event) {
                         case "Register":
-                        register(log.returnValues);
-                        break;
+                            register(log.returnValues);
+                            break;
+                        case "Vote":
+                            vote(log.returnValues);
+                            break;
                     default:
                         console.log(log);
                     }

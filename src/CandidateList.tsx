@@ -63,7 +63,8 @@ const CandidateList: React.FC<Props> = ({
                     <div>Candidate ID: {c.id}</div>
                     <div>Candidate Name: {c.name}</div>
                     <div>Candidate Vote Count: {c.numVotes}</div>
-                    <Button onClick={() => onClick(i)}
+                    {console.log("list", c.numVotes, typeof(c.numVotes))}
+                    <Button onClick={() => onClick(c.id)}
                     >
                         Vote
                     </Button>

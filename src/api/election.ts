@@ -36,8 +36,10 @@ export async function get(web3: Web3, account: string): Promise<GetResponse> {
             id: candidate.id.toNumber(),
             name: candidate.name, 
             numVotes: candidate.numVotes.toNumber(), 
+            
             owner: candidate.owner,
         });
+        console.log("api", candidate.numVotes.toNumber(), typeof(candidate.numVotes.toNumber()));
     }
 
     return {
@@ -107,5 +109,14 @@ interface Register {
     };
 }
 
+interface Vote {
+    event: "Vote";
+    returnValues: {
+        owner: string;
+        id: number;
+    }
+}
+
 type Log = 
     | Register
+    | Vote
