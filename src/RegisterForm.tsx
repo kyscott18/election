@@ -10,7 +10,7 @@ interface Props {}
 interface RegisterParams {
     web3: Web3;
     account: string;
-    name: string;
+    tag: string;
 }
 
 const RegisterForm: React.FC<Props> = () => {
@@ -18,13 +18,13 @@ const RegisterForm: React.FC<Props> = () => {
         state: { web3, account },
         } = useWeb3Context();
 
-    const [name, setName] = useState("");
+    const [tag, setTag] = useState("");
     const {pending, call} = useAsync<RegisterParams, void>(
-        ({web3, account, name}) => register(web3, account, { name })
+        ({web3, account, tag}) => register(web3, account, { tag })
     );
 
     function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setName(e.target.value);
+        setTag(e.target.value);
     }
 
     async function onSubmit(_e: React.FormEvent<HTMLFormElement>) {
@@ -36,17 +36,15 @@ const RegisterForm: React.FC<Props> = () => {
           alert("No web3");
           return;
         }
-    
         const { error } = await call({
             web3,
             account,
-            name,
+            tag,
           });
-
         if (error) {
         alert(`Error: ${error.message}`);
         } else {
-        setName("");
+        setTag("");
         }
       }
 
@@ -54,9 +52,9 @@ const RegisterForm: React.FC<Props> = () => {
         <Form onSubmit={onSubmit}>
           <Form.Field>
             <Form.Input
-              placeholder="Enter your name"
+              placeholder="Enter your tag"
               type="string"
-              value={name}
+              value={tag}
               onChange={onChange}
             />
           </Form.Field>

@@ -8,7 +8,7 @@ import { useWeb3Context } from "./contexts/Web3";
 interface Candidate {
     owner: string;
     id: number;
-    name: string;
+    tag: string;
     numVotes: number;
 }
 
@@ -61,7 +61,7 @@ const CandidateList: React.FC<Props> = ({
                 <li key = {c.id}>
                     <div>Candidate Address: {c.owner}</div>
                     <div>Candidate ID: {c.id}</div>
-                    <div>Candidate Name: {c.name}</div>
+                    <div>Candidate tag: {c.tag}</div>
                     <div>Candidate Vote Count: {c.numVotes}</div>
                     {console.log("list", c.numVotes, typeof(c.numVotes))}
                     <Button onClick={() => onClick(c.id)}

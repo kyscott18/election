@@ -20,7 +20,7 @@ interface State {
 interface Candidate {
     owner: string;
     id: number;
-    name: string;
+    tag: string;
     numVotes: number;
 }
 
@@ -58,7 +58,7 @@ interface Register {
     data: {
         owner: string;
         id: number;
-        name: string;
+        tag: string;
     }
 }
 
@@ -75,14 +75,14 @@ function reducer(state: State = INITIAL_STATE, action: Action) {
 
         case REGISTER: {
             const {
-                data: { owner, id, name},
+                data: { owner, id, tag},
             } = action;
             const candidates = [
                 ...state.candidates,
                 {
                     owner: owner,
                     id: id, 
-                    name: name, 
+                    tag: tag, 
                     voteCount: 0
                 }
             ];
@@ -143,7 +143,7 @@ interface VoteInputs {
 interface RegisterInputs {
     owner: string;
     id: number;
-    name: string;
+    tag: string;
 }
 
 const ElectionContext = createContext({

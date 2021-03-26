@@ -8,7 +8,7 @@ const Election = TruffleContract(electionTruffle);
 interface Candidate {
     owner: string; 
     id: number;
-    name: string;
+    tag: string;
     numVotes: number;
 }
 
@@ -34,7 +34,7 @@ export async function get(web3: Web3, account: string): Promise<GetResponse> {
 
         candidates.push({
             id: candidate.id.toNumber(),
-            name: candidate.name, 
+            tag: candidate.tag, 
             numVotes: candidate.numVotes.toNumber(), 
             
             owner: candidate.owner,
@@ -55,13 +55,12 @@ export async function register(
     web3: Web3, 
     account: string,
     params: {
-        name: string;
+        tag: string;
     }
 ) {
     Election.setProvider(web3.currentProvider);
     const elect = await Election.deployed();
-
-    await elect.register(params.name, {
+    await elect.register(params.tag, {
         from: account,
     });
 
@@ -105,7 +104,7 @@ interface Register {
     returnValues: {
         owner: string;
         id: number;
-        name: string;
+        tag: string;
     };
 }
 
